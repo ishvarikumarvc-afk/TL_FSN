@@ -1,1 +1,60 @@
-javascript:(function(){const script=document.createElement('script');script.innerHTML="(async()=>{const style=document.createElement('style');style.innerHTML='#hp{position:fixed;top:10px;right:10px;z-index:10001;width:320px;background:#fff;border-radius:12px;box-shadow:0 10px 40px #0008;font-family:sans-serif;border:2px solid #0073b1}.hd{background:#0073b1;color:#fff;padding:12px;font-weight:bold;text-align:center;border-radius:10px 10px 0 0}textarea{width:100%;height:80px;padding:10px;box-sizing:border-box;border:1px solid #ddd}#btn{width:100%;padding:12px;background:#fb641b;color:#fff;border:none;font-weight:bold;cursor:pointer}#log{max-height:100px;overflow-y:auto;font-size:11px;background:#000;color:#0f0;padding:10px;font-family:monospace}';document.head.appendChild(style);const container=document.createElement('div');container.id='hp';container.innerHTML='<div class=\"hd\">🚀 FLO ULTRA-FAST V6</div><div style=\"padding:15px\"><textarea id=\"txt\" placeholder=\"ID FSN\"></textarea><button id=\"btn\">START RUN</button><div id=\"log\">> Ready...</div><div id=\"dl\"></div></div>';document.body.appendChild(container);const btn=document.getElementById('btn'),log=document.getElementById('log'),txt=document.getElementById('txt');btn.onclick=async()=>{const lines=txt.value.trim().split('\\n'),res=[];btn.disabled=true;for(let i=0;i<lines.length;i++){const[id,fsn]=lines[i].trim().split(/\\s+/);if(!fsn)continue;log.innerHTML=`> Processing: ${fsn}<br>`+log.innerHTML;const inp=document.querySelector(\"#fsn_input\");if(inp){inp.focus();inp.value=fsn;inp.dispatchEvent(new Event(\"input\",{bubbles:true}));await new Promise(r=>setTimeout(r,570));/* 30ms cut here */['keydown','keypress','keyup'].forEach(t=>{inp.dispatchEvent(new KeyboardEvent(t,{key:\"Enter\",code:\"Enter\",keyCode:13,which:13,bubbles:true,view:window}))});/* Wait for popup/data - optimized to 2.2s */await new Promise(r=>setTimeout(r,2200));let cat=\"Not Found\";let source=document.querySelector(\".fk-ui-dialog\") || document;const el=Array.from(source.querySelectorAll(\"div,td,span\")).find(e=>e.innerText.trim().startsWith(\"Vertical:\"));if(el){cat=el.innerText.replace(/Vertical:\\s*/i,\"\").trim().split(\"\\n\")[0];}res.push({id,fsn,cat});log.innerHTML=`<span style=\"color:cyan;\">> Saved: ${cat}</span><br>`+log.innerHTML;const cls=document.querySelector(\"body>div.fk-ui-dialog>div.window.alpha30>span\");if(cls)cls.click();await new Promise(r=>setTimeout(r,470));/* Cleanup optimized */}}const csv=\"ID,FSN,Category\\n\"+res.map(r=>`\"${r.id}\",\"${r.fsn}\",\"${r.cat}\"`).join(\"\\n\");document.getElementById(\"dl\").innerHTML=`<a href=\"${URL.createObjectURL(new Blob([csv],{type:\"text/csv\"}))}\" download=\"FLO_Report.csv\" style=\"display:block;text-align:center;padding:10px;background:#2ecc71;color:#fff;text-decoration:none;margin-top:10px;font-weight:bold;border-radius:6px\">📥 DOWNLOAD CSV</a>`;btn.disabled=false;};})();";document.body.appendChild(script);})();
+javascript:(function(){
+    const script = document.createElement('script');
+    script.innerHTML = `(async()=>{
+        const style = document.createElement('style');
+        style.innerHTML = '#hp{position:fixed;top:10px;right:10px;z-index:10001;width:320px;background:#fff;border-radius:12px;box-shadow:0 10px 40px #0008;font-family:sans-serif;border:2px solid #0073b1}.hd{background:#0073b1;color:#fff;padding:12px;font-weight:bold;text-align:center;border-radius:10px 10px 0 0}textarea{width:100%;height:80px;padding:10px;box-sizing:border-box;border:1px solid #ddd}#btn{width:100%;padding:12px;background:#fb641b;color:#fff;border:none;font-weight:bold;cursor:pointer}#log{max-height:100px;overflow-y:auto;font-size:11px;background:#000;color:#0f0;padding:10px;font-family:monospace}';
+        document.head.appendChild(style);
+        
+        const container = document.createElement('div');
+        container.id = 'hp';
+        container.innerHTML = '<div class="hd">🚀 FLO ULTRA-FAST V6</div><div style="padding:15px"><textarea id="txt" placeholder="ID FSN"></textarea><button id="btn">START RUN</button><div id="log">> Ready...</div><div id="dl"></div></div>';
+        document.body.appendChild(container);
+        
+        const btn = document.getElementById('btn'), log = document.getElementById('log'), txt = document.getElementById('txt');
+        
+        btn.onclick = async() => {
+            const lines = txt.value.trim().split('\\n'), res = [];
+            btn.disabled = true;
+            
+            for (let i = 0; i < lines.length; i++) {
+                const parts = lines[i].trim().split(/\\s+/);
+                const id = parts[0];
+                const fsn = parts[1];
+                if (!fsn) continue;
+                
+                log.innerHTML = '> Processing: ' + fsn + '<br>' + log.innerHTML;
+                const inp = document.querySelector("#fsn_input");
+                if (inp) {
+                    inp.focus();
+                    inp.value = fsn;
+                    inp.dispatchEvent(new Event("input", {bubbles:true}));
+                    await new Promise(r => setTimeout(r, 570));
+                    
+                    ['keydown','keypress','keyup'].forEach(t => {
+                        inp.dispatchEvent(new KeyboardEvent(t, {key:"Enter", code:"Enter", keyCode:13, which:13, bubbles:true, view:window}));
+                    });
+                    
+                    await new Promise(r => setTimeout(r, 2200));
+                    let cat = "Not Found";
+                    let source = document.querySelector(".fk-ui-dialog") || document;
+                    const el = Array.from(source.querySelectorAll("div,td,span")).find(e => e.innerText.trim().startsWith("Vertical:"));
+                    if (el) {
+                        cat = el.innerText.replace(/Vertical:\\s*/i, "").trim().split("\\n")[0];
+                    }
+                    res.push({id, fsn, cat});
+                    log.innerHTML = '<span style="color:cyan;">> Saved: ' + cat + '</span><br>' + log.innerHTML;
+                    
+                    const cls = document.querySelector("body>div.fk-ui-dialog>div.window.alpha30>span");
+                    if (cls) cls.click();
+                    await new Promise(r => setTimeout(r, 470));
+                }
+            }
+            
+            const csv = "ID,FSN,Category\\n" + res.map(r => '"' + r.id + '","' + r.fsn + '","' + r.cat + '"').join("\\n");
+            const u = URL.createObjectURL(new Blob([csv], {type:"text/csv"}));
+            document.getElementById("dl").innerHTML = '<a href="' + u + '" download="FLO_Report.csv" style="display:block;text-align:center;padding:10px;background:#2ecc71;color:#fff;text-decoration:none;margin-top:10px;font-weight:bold;border-radius:6px">📥 DOWNLOAD CSV</a>';
+            btn.disabled = false;
+        };
+    })();`;
+    document.body.appendChild(script);
+})();
